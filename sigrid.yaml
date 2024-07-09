@@ -1,0 +1,13 @@
+exclude:
+  - 'node_modules/.*'
+  - 'docs/.*'
+  - '[.]github/.*'
+  - '[.]husky/.*'
+  - '[.]idea/.*'
+
+include:
+  - '.*/.*[.]js'
+  - '.*/.*[.]mjs'
+
+languages:
+  - name: javascript

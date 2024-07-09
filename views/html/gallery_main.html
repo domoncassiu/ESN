@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="user-scalable=no" />
+    <title>Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              main: '#ffa3a3',
+              hui: '#E0E1E4',
+              iconFont: '#CCCCCC',
+              black: '#000000',
+            },
+          },
+        },
+      };
+    </script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/shelter_ratings_page.js"></script>
+    <script type="module" src="../js/gallery_main.js"></script>
+    <!-- <script type="module" src="../js/announcement_page_search.js"></script>
+  <script type="module" src="../js/search.js"></script> -->
+    <!-- <script src="../js/message.js"></script> -->
+    <script type="module" src="../js/footer_component.js"></script>
+    <script
+      src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+      integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/shelter_review_style.css"
+    />
+    <!-- <link rel="stylesheet" href="../css/search.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../css/chat_page_style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="h-full m-0">
+    <div id="container" class="flex flex-col overflow-y-auto h-[80vh]">
+      <header>
+        <div class="imgtoptitile z-20">
+          <svg class="topicon" viewBox="0 0 50 50">
+            <g transform="translate(10, 10)">
+              <!--        <path transform="translate(-50 -50)" fill="tomato" d="M18 3C11.3726 3 6 8.37258 6 15C6 23.544 12.12 29.8361 17.25 36.6528C17.6406 37.1742 18.3594 37.1742 18.75 36.6528C23.88 29.8361 30 23.544 30 15C30 8.37258 24.6274 3 18 3Z"></path>-->
+              <path
+                d="M5.477,13.592l3.699-4.625c0.215-0.267,0.556-0.402,0.89-0.369c0.34,0.037,0.638,0.245,0.788,0.552l4.191,8.501l5.098-7.14
+                          c0.185-0.26,0.482-0.415,0.802-0.419c0.295-0.007,0.621,0.146,0.812,0.4l2.7,3.6h4.695c0.039-0.112,0.09-0.218,0.127-0.331
+                          c1.491-5.369,0.203-8.604-1.141-10.371C26.526,1.268,23.887,0,21.079,0c-2.39,0-4.631,1.013-6.103,2.673
+                          C13.5,1.013,11.247,0,8.844,0C6.042,0,3.406,1.265,1.797,3.383C0.472,5.127-0.792,8.302,0.62,13.592H5.477z"
+              />
+              <path
+                d="M23.957,16.092c-0.314,0-0.611-0.148-0.8-0.4l-2.181-2.906l-5.275,7.388c-0.188,0.265-0.492,0.419-0.813,0.419
+                          c-0.026,0-0.054-0.001-0.081-0.003c-0.351-0.029-0.66-0.239-0.815-0.555l-4.235-8.59l-3.018,3.772
+                          c-0.19,0.237-0.478,0.375-0.781,0.375H1.375c3.755,8.193,13.583,12.872,13.583,12.997v0.003c0.007,0,0.016,0,0.02,0v-0.001
+                          c0.871-0.075,9.573-4.864,13.331-12.499H23.957z"
+              />
+              <animateTransform
+                attributeName="transform"
+                type="scale"
+                values="1; 1.25; 1.25; 1.25; 1.25; 1;"
+                dur="1s"
+                repeatCount="indefinite"
+                additive="sum"
+              ></animateTransform>
+            </g>
+          </svg>
+          <p class="title">ESN Gallery</p>
+          <button
+            id="logout_button"
+            type="button"
+            class="front_page_button ml-auto md:mr-28 mr-8 gap-x-2 rounded-[0.6vh] bg-red-300 px-3.5 py-2.5 text-5xl font-semibold text-white shadow-sm hover:bg-red-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
+          >
+            logout
+          </button>
+        </div>
+      </header>
+      <!-- Subheader -->
+      <subheader class="flex justify-center md:mx-20 mb-2 mt-2">
+        <h1 class="album text-center text-4xl">Albums</h1>
+      </subheader>
+      <main class="flex-1 px-2 py-3 space-y-2" id="albumContainer">
+        <div class="grid grid-cols-2 gap-4" id="album-container">
+          <a href="album_view.html?albumName=Community" class="group">
+            <div class="flex flex-col items-center">
+              <img
+                class="h-auto md:h-[29vh] md:w-96 max-w-full object-cover rounded-lg border-2 border-black"
+                src="https://esn-gallery.s3.us-west-1.amazonaws.com/community.jpg"
+                alt=""
+              />
+              <h1 class="text-3xl mt-1">Community</h1>
+            </div>
+          </a>
+          <a href="album_view.html?albumName=Incident" class="group">
+            <div class="flex flex-col items-center">
+              <img
+                class="h-[17vh] md:h-[29vh] w-100 md:w-96 max-w-full rounded-lg border-2 border-black object-cover"
+                src="https://esn-gallery.s3.us-west-1.amazonaws.com/incident.jpg"
+                alt=""
+              />
+              <h1 class="text-3xl mt-1">Incident</h1>
+            </div>
+          </a>
+          <a href="album_view.html?albumName=Evacuation" class="group">
+            <div class="flex flex-col items-center">
+              <img
+                class="h-[15vh] md:h-[29vh] w-[100vw] md:w-96 max-w-full rounded-lg border-2 border-black object-cover"
+                src="https://esn-gallery.s3.us-west-1.amazonaws.com/evacuation.jpg"
+                alt=""
+              />
+              <h1 class="text-3xl mt-1">Evacuation</h1>
+            </div>
+          </a>
+          <a href="album_view.html?albumName=Supply" class="group">
+            <div class="flex flex-col items-center">
+              <img
+                class="h-[15vh] md:h-[29vh] w-100 md:w-96 max-w-full rounded-lg border-2 border-black object-cover"
+                src="https://esn-gallery.s3.us-west-1.amazonaws.com/supply.jpg"
+                alt=""
+              />
+              <h1 class="text-3xl mt-1">Supply</h1>
+            </div>
+          </a>
+          <a href="album_view.html?albumName=Shelter" class="group">
+            <div class="flex flex-col items-center">
+              <img
+                class="h-[15vh] md:h-[29vh] w-[100vw] md:w-96 max-w-full rounded-lg border-2 border-black object-cover"
+                src="https://esn-gallery.s3.us-west-1.amazonaws.com/shelterthumb.png"
+                alt=""
+              />
+              <h1 class="text-3xl mt-1">Shelter</h1>
+            </div>
+          </a>
+        </div>
+      </main>
+      <!-- footer -->
+    </div>
+    <footer-component selectedPage="Gallery"></footer-component>
+  </body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="user-scalable=no" />
+    <title>Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              main: '#ffa3a3',
+              hui: '#E0E1E4',
+              iconFont: '#CCCCCC',
+              black: '#000000',
+            },
+          },
+        },
+      };
+    </script>
+    <script type="module" src="../js/auth.js"></script>
+    <script type="module" src="../js/announcement_page.js"></script>
+    <script type="module" src="../js/announcement_page_search.js"></script>
+    <script type="module" src="../js/header_component.js"></script>
+    <script type="module" src="../js/footer_component.js"></script>
+    <script type="module" src="../js/search.js"></script>
+    <!-- <script src="../js/message.js"></script> -->
+    <script
+      src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+      integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/search.css" />
+    <link rel="stylesheet" href="../css/tabBar.css" />
+    <link rel="stylesheet" type="text/css" href="../css/chat_page_style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header-component selectedPage="Announce"></header-component>
+
+    <div class="button_holder">
+      <!-- status button -->
+
+      <!-- logout button -->
+      <button
+        id="logout_button"
+        type="button"
+        class="front_page_button self-center items-center gap-x-2 rounded-[0.6vh] bg-red-300 px-3.5 py-2.5 text-5xl font-semibold text-white shadow-sm hover:bg-red-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-300"
+      >
+        logout
+      </button>
+    </div>
+
+    <div
+      id="confirm_dialog"
+      class="relative invisible z-50"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+          Background backdrop, show/hide based on modal state.
+
+          Entering: "ease-out duration-300"
+            From: "opacity-0"
+            To: "opacity-100"
+          Leaving: "ease-in duration-200"
+            From: "opacity-100"
+            To: "opacity-0"
+        -->
+      <div
+        id="confirm_back"
+        class="ease-out duration-300 opacity-0 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+              Modal panel, show/hide based on modal state.
+
+              Entering: "ease-out duration-300"
+                From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                To: "opacity-100 translate-y-0 sm:scale-100"
+              Leaving: "ease-in duration-200"
+                From: "opacity-100 translate-y-0 sm:scale-100"
+                To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            -->
+          <div
+            id="confirm_panel"
+            class="ease-out duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  Notification
+                </h3>
+                <div class="mt-8">
+                  <p
+                    class="text-5xl text-gray-500 leading-tight"
+                    id="notification_text"
+                  >
+                    Are you sure you want to create a new account
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="confirm"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                confirm
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- public chat  -->
+    <section
+      class="flex-1 flex flex-col p-10 overflow-auto h-[62vh] top-[8vh] relative"
+      id="messageContainer"
+    >
+      <!-- <div class="flex flex-col gap-2.5 w-full leading-1.5 p-4 border-gray-200 bg-red-100 rounded-e-3xl rounded-es-3xl mb-7">
+          <div class="text-4xl flex items-center space-x-2 rtl:space-x-reverse">
+             <span class="font-bold-300 text-gray-500 dark:text-gray-400">Bonnie Green</span>
+             <span class="font-bold-300 text-gray-500 dark:text-gray-400">11:46</span>
+          </div>
+            <p class="font-7 text-black font-normal break_all">tisis20characterlong</p>
+      </div> -->
+    </section>
+
+    <footer
+      id="inputbar"
+      class="p-10 fixed bottom-[8vh] w-full flex justify-between"
+    >
+      <input
+        id="publicchat"
+        class="border-4 bg-hui px-8 py-3 w-[100vw] rounded-full font-7"
+        placeholder="Write public announcement here"
+      />
+      <!-- <svg
+        id="sendicon"
+        width="90"
+        height="90"
+        viewBox="0 0 52 52"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        onclick="clickSend()"
+      >
+        <circle cx="26" cy="26" r="26" fill="#FFD1D1" />
+        <path
+          d="M10.8377 28.0078C9.68066 28.6148 9.72866 29.5038 10.9417 29.9838L14.5357 31.4058C15.7497 31.8878 17.5867 31.6248 18.6157 30.8218L34.2227 18.5138C35.2487 17.7068 35.3587 17.8258 34.4677 18.7798L22.1297 31.9858C21.2357 32.9368 21.4997 34.1048 22.7177 34.5758L23.1387 34.7398C24.3567 35.2108 26.3417 36.0018 27.5517 36.4938L31.5377 38.1168C32.7487 38.6088 34.0427 38.0288 34.3867 36.7688L40.4617 14.4388C40.8047 13.1788 40.1387 12.6438 38.9817 13.2498L10.8377 28.0078Z"
+          fill="white"
+        />
+        <path
+          d="M20.7007 42.6268C20.6297 42.8398 23.1587 38.9648 23.1587 38.9648C23.8737 37.8728 23.4677 36.5698 22.2597 36.0758L19.5017 34.9468C18.2937 34.4528 17.7147 35.0328 18.2147 36.2398C18.2147 36.2398 20.7737 42.4078 20.7007 42.6268Z"
+          fill="white"
+        />
+      </svg> -->
+    </footer>
+
+    <footer-component selectedPage="Announce"></footer-component>
+  </body>
+</html>

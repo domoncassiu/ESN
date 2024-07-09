@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              main: '#ffa3a3',
+              hui: '#E0E1E4',
+              iconFont: '#CCCCCC',
+              black: '#000000',
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="stylesheet" href="../css/search.css" />
+    <script type="module" src="../js/incident_directory.js"></script>
+    <script type="module" src="../js/header_component.js"></script>
+    <script type="module" src="../js/footer_component.js"></script>
+    <script type="module" src="../js/auth.js"></script>
+    <!-- <script src="../js/message.js"></script> -->
+    <script type="module" src="../js/status.js"></script>
+    <script
+      src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+      integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header-component selectedPage="Incidents"></header-component>
+    <div
+      style="height: 8vh; background-color: white; position: fixed"
+      class="w-full"
+    ></div>
+    <section
+      class="flex-1 flex flex-col overflow-auto ml-[8vw] mr-[8vw] h-[65vh] top-[10vh] relative"
+      id="userList"
+    >
+      <div id="mainHeading" class="flex flex-row justify-between">
+        <p class="font-10 flex-start">Incidents</p>
+        <svg
+          class="h-20 w-20 text-emerald-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          id="create_new_incident_button"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <div class="flex-1 space-y-10 mt-16" id="incidentsContainer"></div>
+    </section>
+
+    <!-- footer -->
+    <footer-component selectedPage="Incidents"></footer-component>
+
+    <!-- login popup -->
+    <div
+      id="login_dialog"
+      class="relative invisible z-50"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+        Background backdrop, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div
+        id="confirm_back"
+        class="ease-out duration-300 opacity-0 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+                Modal panel, show/hide based on modal state.
+
+                Entering: "ease-out duration-300"
+                  From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  To: "opacity-100 translate-y-0 sm:scale-100"
+                Leaving: "ease-in duration-200"
+                  From: "opacity-100 translate-y-0 sm:scale-100"
+                  To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              -->
+          <div
+            id="login_panel"
+            class="ease-out duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  Welcome Back
+                </h3>
+                <div class="mt-8">
+                  <p
+                    class="text-5xl text-gray-500 leading-tight"
+                    id="login_text"
+                  >
+                    Are you sure you want to create a new account
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="confirm_new"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                confirm
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- confirm popup -->
+    <div
+      id="confirm_dialog"
+      class="relative invisible z-50"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+        Background backdrop, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div
+        id="login_back"
+        class="ease-out duration-300 opacity-0 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+                Modal panel, show/hide based on modal state.
+
+                Entering: "ease-out duration-300"
+                  From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  To: "opacity-100 translate-y-0 sm:scale-100"
+                Leaving: "ease-in duration-200"
+                  From: "opacity-100 translate-y-0 sm:scale-100"
+                  To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              -->
+          <div
+            id="confirm_panel"
+            class="ease-out duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  Notification
+                </h3>
+                <div class="mt-8">
+                  <p
+                    class="text-5xl text-gray-500 leading-tight"
+                    id="notification_text"
+                  >
+                    Are you sure you want to create a new account
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="confirm"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                confirm
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- dialog popups -->
+    <div
+      id="dialog1"
+      style="display: none"
+      class="relative z-50"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+        Background backdrop, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div
+        id="modal1_back"
+        class="ease-in duration-200 opacity-100 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 z-50 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+                Modal panel, show/hide based on modal state.
+
+                Entering: "ease-out duration-300"
+                  From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  To: "opacity-100 translate-y-0 sm:scale-100"
+                Leaving: "ease-in duration-200"
+                  From: "opacity-100 translate-y-0 sm:scale-100"
+                  To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              -->
+          <div
+            id="modal1_panel"
+            class="ease-in duration-200 opacity-100 translate-y-0 sm:scale-100 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  Important Notice
+                </h3>
+                <div class="mt-8">
+                  <p class="text-5xl text-gray-500 leading-tight">
+                    Welcome to Emergency Social Network (ESN)! In moments of
+                    crisis, ESN is your ally for quick communication and
+                    support. Please carefully read through the guide to use our
+                    app.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="modal1_next"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                Next
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="dialog2"
+      style="display: none"
+      class="relative z-40"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+        Background backdrop, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div
+        id="modal2_back"
+        class="ease-out duration-300 opacity-100 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 z-40 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+                Modal panel, show/hide based on modal state.
+
+                Entering: "ease-out duration-300"
+                  From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  To: "opacity-100 translate-y-0 sm:scale-100"
+                Leaving: "ease-in duration-200"
+                  From: "opacity-100 translate-y-0 sm:scale-100"
+                  To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              -->
+          <div
+            id="modal2_panel"
+            class="ease-out duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  Share Your Status
+                </h3>
+                <div class="mt-8">
+                  <p class="text-5xl text-gray-500 leading-tight">
+                    Let others know about your well-being. Choose from three
+                    statuses:<br /><br />
+                  </p>
+
+                  <div class="oneline text-5xl text-gray-500 leading-tight">
+                    <svg
+                      id="safe"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      width="80px"
+                      height="80px"
+                      viewBox="0 0 22.619 32"
+                      style="enable-background: new 0 0 22.619 32"
+                      xml:space="preserve"
+                    >
+                      <g id="secret-love">
+                        <path
+                          d="M6.81,9.419V7.977C6.81,5.784,8.593,4,10.785,4h1.049c2.192,0,3.976,1.784,3.976,3.977v1.441
+                          c0.038-0.001,0.075-0.01,0.113-0.01c1.39,0,2.728,0.371,3.887,1.026V7.977C19.81,3.578,16.231,0,11.834,0h-1.049
+                          C6.388,0,2.81,3.578,2.81,7.977v2.452c1.155-0.651,2.488-1.021,3.873-1.021C6.726,9.408,6.767,9.418,6.81,9.419z"
+                        />
+                        <path
+                          d="M21.254,12.968c-1.218-1.603-3.211-2.56-5.331-2.56c-1.805,0-3.497,0.765-4.609,2.019
+                          c-1.115-1.254-2.816-2.019-4.631-2.019c-2.116,0-4.106,0.955-5.321,2.555c-1.015,1.335-1.987,3.777-0.85,7.872
+                          c2.279,7.021,10.242,11.062,10.785,11.163V32H11.3c0.005,0,0.012,0,0.015,0v-0.001c0.723-0.063,8.599-4.412,10.801-11.199
+                          C23.241,16.745,22.269,14.303,21.254,12.968z M12.81,21.488v2.535c0,0.539-0.437,0.977-0.976,0.977h-1.049
+                          c-0.539,0-0.976-0.438-0.976-0.977v-2.535c-0.604-0.456-1-1.173-1-1.988c0-1.381,1.119-2.5,2.5-2.5s2.5,1.119,2.5,2.5
+                          C13.81,20.315,13.413,21.032,12.81,21.488z"
+                        />
+                      </g>
+                      <g id="Layer_1"></g>
+                    </svg>
+
+                    <p>Safe: Confirm your safety to your loved ones.</p>
+                  </div>
+                  <br />
+
+                  <div class="oneline text-5xl text-gray-500 leading-tight">
+                    <svg
+                      id="help"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      width="120px"
+                      height="120px"
+                      viewBox="0 0 22.429 30.41"
+                      style="enable-background: new 0 0 22.429 30.41"
+                      xml:space="preserve"
+                    >
+                      <g id="love-2">
+                        <path
+                          d="M21.075,2.538C19.867,0.949,17.891,0,15.788,0c-1.789,0-3.468,0.758-4.57,2.002C10.113,0.758,8.426,0,6.626,0
+                          C4.528,0,2.555,0.947,1.349,2.533c-1.005,1.323-1.97,3.746-0.842,7.806c0.176,0.543,0.396,1.061,0.635,1.567
+                          c0.986-0.572,2.046-0.884,3.086-0.884c1.312,0,2.566,0.478,3.629,1.383c0.947,0.805,1.226,0.998,2.29,1.595
+                          c0.213,0.119,0.417,0.175,0.643,0.175c0.532,0,1.132-0.31,1.767-0.638l0.199-0.103c0.362-0.185,0.748-0.278,1.147-0.278h0.001
+                          c0.833,0,1.568,0.409,2.218,0.77c0.56,0.311,1.087,0.604,1.558,0.604c0.192-0.015,0.724-0.281,0.924-0.382
+                          c0.129-0.064,0.24-0.12,0.326-0.157c0.322-0.142,0.653-0.262,0.986-0.36c0.122-0.035,0.249-0.054,0.377-0.054
+                          c0.016,0,0.029,0.005,0.045,0.006c0.653-1.016,1.211-2.107,1.591-3.278C23.045,6.283,22.081,3.861,21.075,2.538z"
+                        />
+                        <path
+                          d="M20.293,14.577c-0.032,0-0.064,0.004-0.096,0.014c-0.282,0.083-0.57,0.187-0.867,0.316
+                          c-0.326,0.144-1.14,0.623-1.642,0.623c-1.418,0-2.586-1.374-3.784-1.374c-0.229,0-0.459,0.05-0.692,0.169
+                          c-0.771,0.394-1.576,0.85-2.422,0.85c-0.369,0-0.745-0.087-1.131-0.303c-1.109-0.621-1.449-0.855-2.449-1.705
+                          c-0.939-0.8-1.968-1.145-2.981-1.145c-0.972-0.001-1.931,0.317-2.787,0.856c-0.438,0.276-0.571,0.854-0.3,1.293
+                          c1.795,2.903,4.357,5.135,6.447,6.607c1.328,0.937,2.004,2.555,1.733,4.157c-0.261,1.551-0.417,3.014-0.417,3.474
+                          c0,1.104,0.896,2,2,2c1.104,0,2-0.896,2-2c0-0.427-0.135-1.72-0.363-3.145c-0.258-1.61,0.435-3.227,1.778-4.151
+                          c1.934-1.33,4.381-3.382,6.252-5.997c0.084-0.119,0.085-0.277,0-0.396C20.506,14.629,20.401,14.577,20.293,14.577z M10.905,29.66
+                          c-0.689,0-1.25-0.561-1.25-1.25c0-0.138,0.112-0.25,0.25-0.25s0.25,0.112,0.25,0.25c0,0.413,0.337,0.75,0.75,0.75
+                          c0.138,0,0.25,0.112,0.25,0.25S11.042,29.66,10.905,29.66z"
+                        />
+                      </g>
+                      <g id="Layer_1"></g>
+                    </svg>
+                    <p>
+                      Help: You require assistance, but it's not an immediate
+                      emergency.
+                    </p>
+                  </div>
+                  <br />
+
+                  <div class="oneline text-5xl text-gray-500 leading-tight">
+                    <svg
+                      id="emergency"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      width="120px"
+                      height="120px"
+                      viewBox="0 0 22.619 30.093"
+                      style="enable-background: new 0 0 22.619 30.093"
+                      xml:space="preserve"
+                    >
+                      <g id="angel">
+                        <path
+                          d="M21.254,11.061c-1.218-1.603-3.211-2.56-5.331-2.56c-1.805,0-3.497,0.765-4.61,2.019c-1.115-1.254-2.816-2.019-4.631-2.019
+                          c-2.116,0-4.106,0.955-5.321,2.555c-1.015,1.335-1.987,3.777-0.85,7.872c2.279,7.021,10.242,11.062,10.785,11.163v0.002
+                          c0.001,0,0.003,0,0.003,0c0.005,0,0.012,0,0.015,0v-0.001c0.723-0.063,8.599-4.412,10.801-11.199
+                          C23.241,14.838,22.269,12.396,21.254,11.061z"
+                        />
+                        <path
+                          d="M11.308,6c1.503,0,9-0.145,9-3s-7.497-3-9-3c-1.503,0-9,0.145-9,3S9.805,6,11.308,6z M11.308,2c3.542,0,5.866,0.57,6.728,1
+                          c-0.862,0.43-3.186,1-6.728,1C7.766,4,5.443,3.43,4.581,3C5.443,2.57,7.766,2,11.308,2z"
+                        />
+                      </g>
+                      <g id="Layer_1"></g>
+                    </svg>
+                    <p>
+                      Emergency: Indicate a situation that needs urgent
+                      attention.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="modal2_next"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                Next
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="dialog3"
+      style="display: none"
+      class="relative z-30"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+        Background backdrop, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div
+        id="modal3_back"
+        class="ease-in duration-200 opacity-100 fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed inset-0 z-40 w-screen overflow-y-auto">
+        <div
+          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        >
+          <!--
+                Modal panel, show/hide based on modal state.
+
+                Entering: "ease-out duration-300"
+                  From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                  To: "opacity-100 translate-y-0 sm:scale-100"
+                Leaving: "ease-in duration-200"
+                  From: "opacity-100 translate-y-0 sm:scale-100"
+                  To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              -->
+          <div
+            id="modal3_panel"
+            class="ease-out duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-7xl sm:p-6"
+          >
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="mt-8 text-5xl font-semibold leading-10 text-gray-900"
+                  id="modal-title"
+                >
+                  How To Stay Safe
+                </h3>
+                <div class="mt-8">
+                  <p class="text-5xl text-gray-500 leading-tight">
+                    - Open ESN and log in.<br />
+                    - Tap "Share Status."<br />
+                    - Choose your status<br />
+                    - Hit "Share" to broadcast your status to contacts and the
+                    emergency network.<br />
+                    - Check for updates from our app and emergency services.<br />
+                    - Follow official guidelines for your safety.<br />
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-8 sm:mt-8 sm:flex sm:flex-row-reverse">
+              <button
+                id="modal3_next"
+                type="button"
+                class="inline-flex w-full justify-center rounded-md bg-red-300 px-6 py-4 text-4xl font-semibold text-white shadow-sm hover:bg-red-200 sm:ml-3 sm:w-auto"
+              >
+                Acknowledge
+              </button>
+              <!-- <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-6 py-4 text-4xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

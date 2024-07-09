@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px"
+	 height="31px" viewBox="0 0 30 31" style="enable-background:new 0 0 30 31;" xml:space="preserve">
+<g id="map-pin-pointer-4">
+	<polygon points="3,24.146 8,26.646 8,10.354 3,7.854 	"/>
+	<path d="M22,23.468l5,1.5V7.459l-3.185-0.637c-0.313,1.661-1.01,3.166-1.815,4.443V23.468z"/>
+	<path d="M23.886,3.777C23.956,4.175,24,4.582,24,5c0,0.281-0.023,0.556-0.047,0.83L28,6.64v19.673l-7-2.101V24V12.691
+		c-0.747,0.959-1.477,1.711-2,2.205v8.249v1.118l-8,4v-1.118V10.854V9.736V9.402C10.94,9.269,10.88,9.137,10.825,9
+		c-0.158-0.39-0.292-0.794-0.41-1.207L10,8L0,3v23l10,5l10-5l10,3V5L23.886,3.777z M2,6.236l7,3.5V10v18v0.264l-7-3.5V6.236z"/>
+	<path d="M17,14c0,0,5-4,5-9c0-2.762-2.238-5-5-5s-5,2.238-5,5C12,10,17,14,17,14z M15,5c0-1.104,0.896-2,2-2s2,0.896,2,2
+		s-0.896,2-2,2S15,6.104,15,5z"/>
+</g>
+<g id="Layer_1">
+</g>
+</svg>

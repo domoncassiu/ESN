@@ -1,0 +1,58 @@
+.resources_page_container {
+  padding-top: 9vh;
+  padding-left: 4vw;
+  padding-right: 4vw;
+  height: 70vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+.font-resource-xl {
+  font-size: 6vw;
+}
+
+.font-resource-lg {
+  font-size: 4vw;
+}
+.font-resource-base {
+  font-size: 2vh;
+}
+.font-resource-xs {
+  font-size: 1.5vh;
+}
+.tab {
+  display: flex;
+  border: 1px solid #cccccc;
+}
+.tablinks {
+  padding: 20px 0px;
+  flex: 1;
+}
+.tabcontent {
+  display: none;
+}
+
+.tablinks.active {
+  color: white;
+  background-color: #fca5a5;
+}
+
+.bg-pink-200 {
+  background-color: #fecaca; /* 浅粉色 */
+}
+
+.bg-blue-200 {
+  background-color: #bfdbfe; /* 浅蓝色 */
+}
+
+.bg-green-200 {
+  background-color: #bbf7d0; /* 浅绿色 */
+}
+
+.bg-yellow-200 {
+  background-color: #fefcbf; /* 浅黄色 */
+}
+
+.bg-purple-200 {
+  background-color: #e9d5ff; /* 浅紫色 */
+}

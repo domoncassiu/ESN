@@ -1,0 +1,78 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: 'Josefin Sans', sans-serif;
+}
+.fill-main {
+  fill: #ffa3a3;
+}
+.fill-hui {
+  fill: #cccccc;
+}
+.font-12 {
+  font-size: 3.8vh;
+}
+.font-10 {
+  font-size: 3vh;
+}
+.font-8 {
+  font-size: 2vh;
+}
+.font-7 {
+  font-size: 1.8vh;
+}
+.font-6 {
+  font-size: 1.5vh;
+}
+.font-4 {
+  font-size: 1vh;
+}
+
+.font-bold-700 {
+  font-weight: 700;
+}
+
+.font-bold-300 {
+  font-weight: 300;
+}
+
+.top-icon {
+  width: 6vw;
+  height: 6vh;
+  margin-right: 3vw;
+  margin-top: -0.5vh;
+}
+
+.top-icon-2 {
+  width: 6vw;
+  height: 3vh;
+}
+
+.top-icon-3 {
+  width: 8vw;
+  height: 5vh;
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
